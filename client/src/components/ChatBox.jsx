@@ -10,6 +10,16 @@ function ChatBox() {
   const [messageText, setMessageText] = useState(""); // Controlled input for the message
   const messagesEndRef = useRef(null); // Reference for the end of the messages container
 
+  const {onlineUsers} = useSocket()
+
+  let isOnline = false
+
+  if(onlineUsers){
+
+     isOnline = onlineUsers.includes(selectedChatUser?._id)
+
+  }
+
   const {socket} = useSocket();
  
   // console.log("chatBox socket",socket);
@@ -20,7 +30,7 @@ function ChatBox() {
 
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/conversation/getMessages/${selectedChatUser._id}`,
+          `https://chat-app-ee8e.onrender.com/api/conversation/getMessages/${selectedChatUser._id}`,
           {},
           {
             withCredentials: true, // Include cookies for authentication
@@ -92,7 +102,7 @@ function ChatBox() {
           {/* Chat Header */}
           <div className="p-4 border-b border-base-300 flex items-center gap-4 bg-base-100">
             <div
-              className={`avatar ${selectedChatUser.status === "online" ? "online" : "offline"}`}
+              className={`avatar ${ isOnline ? "online" : ""}`}
             >
               <div className="w-10 rounded-full">
                 <img src={selectedChatUser.profilePic} alt={selectedChatUser.userName} />
@@ -101,7 +111,7 @@ function ChatBox() {
             <div>
               <h2 className="font-semibold">{selectedChatUser.userName}</h2>
               <p className="text-sm text-base-content/70">
-                {selectedChatUser.status === "online" ? "Online" : "Offline"}
+                { isOnline ? "Online" : "Offline"}
               </p>
             </div>
           </div>
