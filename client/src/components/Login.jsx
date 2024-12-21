@@ -34,7 +34,7 @@ function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('https://chat-app-ee8e.onrender.com/api/authRoutes/loginUser', data, {
+      const response = await axios.post('http://localhost:5000/api/authRoutes/loginUser', data, {
         withCredentials: true,
       });
 

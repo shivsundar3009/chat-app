@@ -9,28 +9,25 @@ function ChatBox() {
   const [conversation, setConversation] = useState([]); // Holds messages for the chat
   const [messageText, setMessageText] = useState(""); // Controlled input for the message
   const messagesEndRef = useRef(null); // Reference for the end of the messages container
+  const [isOnline, setIsOnline] = useState(false); // Track online status
 
-  const {onlineUsers} = useSocket()
-
-  let isOnline = false
-
-  if(onlineUsers){
-
-     isOnline = onlineUsers.includes(selectedChatUser?._id)
-
-  }
-
-  const {socket} = useSocket();
+  const {socket, onlineUsers} = useSocket();
  
-  // console.log("chatBox socket",socket);
-
+  useEffect(() => {
+    if (onlineUsers && selectedChatUser?._id) {
+      setIsOnline(onlineUsers.includes(selectedChatUser._id));
+    } else {
+      setIsOnline(false); // Default to offline if no user is selected or `onlineUsers` is unavailable
+    }
+  }, [onlineUsers, selectedChatUser]);
+  
   useEffect(() => {
     const getConversation = async () => {
       if (!selectedChatUser?._id) return; // Ensure a user is selected before fetching
 
       try {
         const res = await axios.post(
-          `https://chat-app-ee8e.onrender.com/api/conversation/getMessages/${selectedChatUser._id}`,
+          `http://localhost:5000/api/conversation/getMessages/${selectedChatUser._id}`,
           {},
           {
             withCredentials: true, // Include cookies for authentication
@@ -127,7 +124,7 @@ function ChatBox() {
                   }`}
                 >
                   <div
-                    className={`chat-bubble ${
+                    className={`chat-bubble break-words ${
                       message.sendersID === currentUser._id
                         ? "chat-bubble-primary"
                         : "chat-bubble-secondary"

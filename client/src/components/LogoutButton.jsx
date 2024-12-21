@@ -16,7 +16,7 @@ const LogoutButton = () => {
   const handleLogout = async () => {
     try {
       // Call API for logout
-      const res = await axios.post("https://chat-app-ee8e.onrender.com/api/authRoutes/logoutUser",{},{
+      const res = await axios.post("http://localhost:5000/api/authRoutes/logoutUser",{},{
         withCredentials:true
       });
 

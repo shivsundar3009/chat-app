@@ -14,7 +14,7 @@ const __dirname = path.resolve()
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "https://chat-app-ee8e.onrender.com/", credentials: true }));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 // Routes
 import userRoutes from "./routes/user.routes.js";
@@ -25,10 +25,10 @@ app.use("/api/userRoutes", userRoutes);
 app.use("/api/authRoutes", authRoutes);
 app.use("/api/conversation", conversationRoutes);
 
-app.use(express.static(path.join(__dirname,"/client/dist")))
-app.get('*', (req,res) => {
-  res.sendFile(path.resolve(__dirname,'client', 'dist', 'index.html'))
-})
+// app.use(express.static(path.join(__dirname,"/client/dist")))
+// app.get('*', (req,res) => {
+//   res.sendFile(path.resolve(__dirname,'client', 'dist', 'index.html'))
+// })
 
 // Default route
 app.get("/", (req, res) => {

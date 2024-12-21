@@ -1,15 +1,15 @@
+import daisyui from "daisyui";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}", // Adjust paths as needed
   ],
   theme: {
     extend: {},
   },
-  plugins: [require('daisyui'),],
+  plugins: [daisyui],
   daisyui: {
     themes: ["light"], // Ensures DaisyUI uses light mode by default
   }
-}
-
+};
