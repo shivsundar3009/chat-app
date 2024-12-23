@@ -20,7 +20,7 @@ const LogoutButton = () => {
         withCredentials:true
       });
 
-      console.log(res);
+      // console.log(res);
       
       // Dispatch Redux action to clear user state
       dispatch(logout());

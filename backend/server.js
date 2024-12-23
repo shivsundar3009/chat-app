@@ -25,10 +25,10 @@ app.use("/api/userRoutes", userRoutes);
 app.use("/api/authRoutes", authRoutes);
 app.use("/api/conversation", conversationRoutes);
 
-// app.use(express.static(path.join(__dirname,"/client/dist")))
-// app.get('*', (req,res) => {
-//   res.sendFile(path.resolve(__dirname,'client', 'dist', 'index.html'))
-// })
+app.use(express.static(path.join(__dirname,"/client/dist")))
+app.get('*', (req,res) => {
+  res.sendFile(path.resolve(__dirname,'client', 'dist', 'index.html'))
+})
 
 // Default route
 app.get("/", (req, res) => {

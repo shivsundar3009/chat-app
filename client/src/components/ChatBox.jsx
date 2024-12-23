@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useSocket } from "../context/SocketContext";
+import { setSelectedChatUser } from "../redux/features/User/UserSlice";
 
-function ChatBox() {
+function ChatBox({ back }) {
   const currentUser = useSelector((state) => state.User?.loggedInUser); // Logged-in user's details
   const selectedChatUser = useSelector((state) => state.User?.selectedChatUser); // Chat partner details
   const [conversation, setConversation] = useState([]); // Holds messages for the chat
@@ -11,8 +12,10 @@ function ChatBox() {
   const messagesEndRef = useRef(null); // Reference for the end of the messages container
   const [isOnline, setIsOnline] = useState(false); // Track online status
 
-  const {socket, onlineUsers} = useSocket();
- 
+  const dispatch = useDispatch();
+
+  const { socket, onlineUsers } = useSocket();
+
   useEffect(() => {
     if (onlineUsers && selectedChatUser?._id) {
       setIsOnline(onlineUsers.includes(selectedChatUser._id));
@@ -20,7 +23,7 @@ function ChatBox() {
       setIsOnline(false); // Default to offline if no user is selected or `onlineUsers` is unavailable
     }
   }, [onlineUsers, selectedChatUser]);
-  
+
   useEffect(() => {
     const getConversation = async () => {
       if (!selectedChatUser?._id) return; // Ensure a user is selected before fetching
@@ -34,7 +37,7 @@ function ChatBox() {
           }
         );
 
-        console.log(res.data);
+        // console.log(res.data);
 
         // If the response contains no messages or null, reset the conversation
         if (!res?.data?.conversation?.messages) {
@@ -57,24 +60,22 @@ function ChatBox() {
     }
   }, [conversation]);
 
-
   useEffect(() => {
     // If a new message is received, add it to the conversation
     socket?.on("newMessage", (message) => {
       // Check if the message is coming from the selected chat user
-        setConversation((prevMessages) => [...prevMessages, message]);
+      setConversation((prevMessages) => [...prevMessages, message]);
     });
-  
+
     // Clean up socket listener on unmount or when socket changes
     return () => {
       socket?.off("newMessage");
     };
-  }, [selectedChatUser?._id, socket,setConversation,conversation]); // Only listen to the selected chat user and socket
-  
+  }, [selectedChatUser?._id, socket, setConversation, conversation]); // Only listen to the selected chat user and socket
 
   const sendMessage = async () => {
     if (!messageText.trim()) return; // Avoid sending empty or whitespace messages
-  
+
     try {
       // Send the message to the backend
       await axios.post(
@@ -86,30 +87,69 @@ function ChatBox() {
       );
       setMessageText("");
     } catch (error) {
-      console.error(`Error sending message or fetching updated conversation:`, error);
+      console.log(
+        `Error sending message or fetching updated conversation:`,
+        error
+      );
     }
   };
 
-  
+  const handleBackChat = () => {
+
+    // console.log(`back back`);
+
+    dispatch(setSelectedChatUser(null))
+
+    setConversation([])
+
+    back();
+  };
 
   return (
-    <div className="overflow-y-auto flex-1 flex flex-col bg-base-100">
+    <div className="overflow-y-auto flex-1 h-full flex flex-col bg-base-100">
       {selectedChatUser ? (
         <>
           {/* Chat Header */}
-          <div className="p-4 border-b border-base-300 flex items-center gap-4 bg-base-100">
-            <div
-              className={`avatar ${ isOnline ? "online" : ""}`}
-            >
-              <div className="w-10 rounded-full">
-                <img src={selectedChatUser.profilePic} alt={selectedChatUser.userName} />
+          <div className="p-4 border-b border-base-300 flex items-center justify-between gap-4 bg-base-100">
+            {/* Avatar and User Info */}
+            <div className="flex items-center gap-4">
+              <div className={`avatar ${isOnline ? "online" : ""}`}>
+                <div className="w-10 rounded-full">
+                  <img
+                    src={selectedChatUser.profilePic}
+                    alt={selectedChatUser.userName}
+                  />
+                </div>
+              </div>
+              <div>
+                <h2 className="font-semibold">{selectedChatUser.userName}</h2>
+                <p className="text-sm text-base-content/70">
+                  {isOnline ? "Online" : "Offline"}
+                </p>
               </div>
             </div>
-            <div>
-              <h2 className="font-semibold">{selectedChatUser.userName}</h2>
-              <p className="text-sm text-base-content/70">
-                { isOnline ? "Online" : "Offline"}
-              </p>
+
+            {/* Back Button for Small Screens */}
+            <div className="md:hidden">
+              <button
+                onClick={handleBackChat} // or use your own function to handle back
+                className="btn btn-ghost text-base-content"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -120,7 +160,9 @@ function ChatBox() {
                 <div
                   key={message._id}
                   className={`chat ${
-                    message.sendersID === currentUser._id ? "chat-end" : "chat-start"
+                    message.sendersID === currentUser._id
+                      ? "chat-end"
+                      : "chat-start"
                   }`}
                 >
                   <div
@@ -161,7 +203,9 @@ function ChatBox() {
                   }}
                 />
                 <button
-                  className={`btn ${messageText.trim() ? "btn-primary" : "btn-disabled"}`}
+                  className={`btn ${
+                    messageText.trim() ? "btn-primary" : "btn-disabled"
+                  }`}
                   disabled={!messageText.trim()}
                   onClick={sendMessage}
                 >
@@ -172,14 +216,18 @@ function ChatBox() {
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center h-full text-center">
+        <div className="flex flex-col justify-between md:items-center md:justify-center h-full text-center">
           <img
             src={currentUser?.profilePic}
             alt={`${currentUser?.userName}'s profile`}
             className="w-32 h-32 rounded-full mb-4 object-cover shadow-lg"
           />
-          <h1 className="text-2xl font-bold mb-2">Welcome, {currentUser?.userName}!</h1>
-          <p className="text-sm text-base-content/70">Select a chat to start a conversation</p>
+          <h1 className="text-2xl font-bold mb-2">
+            Welcome, {currentUser?.userName}!
+          </h1>
+          <p className="text-sm text-base-content/70">
+            Select a chat to start a conversation
+          </p>
         </div>
       )}
     </div>

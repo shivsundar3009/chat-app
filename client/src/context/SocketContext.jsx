@@ -15,7 +15,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      console.log(`hello ji`);
+      // console.log(`hello ji`);
 
       const socket = io("http://localhost:5000", {
         query: {
@@ -26,7 +26,7 @@ export const SocketContextProvider = ({ children }) => {
       setSocket(socket);
 
       socket.on("getOnlineUsers", (users) => {
-          console.log(users);
+          // console.log(users);
           setOnlineUsers(users);
       });
 
