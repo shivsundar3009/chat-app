@@ -30,7 +30,7 @@ function ChatBox({ back }) {
 
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/conversation/getMessages/${selectedChatUser._id}`,
+          `https://chat-app-60lc.onrender.com/api/conversation/getMessages/${selectedChatUser._id}`,
           {},
           {
             withCredentials: true, // Include cookies for authentication
@@ -79,7 +79,7 @@ function ChatBox({ back }) {
     try {
       // Send the message to the backend
       await axios.post(
-        `http://localhost:5000/api/conversation/sendMessage/${selectedChatUser._id}`,
+        `https://chat-app-60lc.onrender.com/api/conversation/sendMessage/${selectedChatUser._id}`,
         { message: messageText.trim() },
         {
           withCredentials: true, // Include cookies for authentication

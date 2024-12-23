@@ -14,7 +14,7 @@ const __dirname = path.resolve()
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "https://chat-app-60lc.onrender.com/", credentials: true }));
 
 // Routes
 import userRoutes from "./routes/user.routes.js";

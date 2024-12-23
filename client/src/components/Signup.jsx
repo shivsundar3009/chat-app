@@ -36,7 +36,7 @@ function Signup() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:5173/api/userRoutes/createUser', data);
+      const response = await axios.post('https://chat-app-60lc.onrender.com/api/userRoutes/createUser', data);
       reset(); // Clear the form on success
       toast.success(response?.data?.message); // Show success toast
       navigate('/', { state: { success: true } }); // Navigate immediately

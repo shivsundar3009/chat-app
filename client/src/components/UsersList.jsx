@@ -39,7 +39,7 @@ function UsersList({onUserClick}) {
     const fetchOtherUsers = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/authRoutes/getOtherUsers",
+          "https://chat-app-60lc.onrender.com/api/authRoutes/getOtherUsers",
           {},
           { withCredentials: true }
         );

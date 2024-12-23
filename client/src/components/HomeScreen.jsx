@@ -7,12 +7,9 @@ import { useSocket } from '../context/SocketContext';
 
 const HomeScreen = () => {
   const currentUser = useSelector((state) => state.User?.loggedInUser);
-  const onlineUsers = useSocket();
   
   // State to control panel visibility
   const [isUserSelected, setIsUserSelected] = useState(false);
-
-  const [removeCssForBack, setRemoveCssForBack] = useState(null);
 
   // Function to handle user click (passed to UsersList)
   const handleUserClick = () => {
