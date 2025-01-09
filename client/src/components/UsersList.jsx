@@ -7,6 +7,7 @@ import {
   setSelectedChatUser,
 } from "../redux/features/User/UserSlice";
 import { useSocket } from "../context/SocketContext";
+import { backendUrl } from "../utils/allUrls";
 
 function UsersList({onUserClick}) {
   const selectedChatUser = useSelector((state) => state.User?.selectedChatUser)
@@ -14,6 +15,8 @@ function UsersList({onUserClick}) {
   const [searchValue, setSearchValue] = useState(""); // State for search input
   const [filteredUsers, setFilteredUsers] = useState([]); // State for filtered users
   const [selectedChat, setSelectedChat] = useState(null); // State for selected chat
+
+  const getUsersUrl = `${backendUrl}/api/authRoutes/getOtherUsers`
 
   useEffect(()=> {
 
@@ -39,7 +42,7 @@ function UsersList({onUserClick}) {
     const fetchOtherUsers = async () => {
       try {
         const response = await axios.post(
-          "https://chat-app-60lc.onrender.com/api/authRoutes/getOtherUsers",
+          getUsersUrl,
           {},
           { withCredentials: true }
         );

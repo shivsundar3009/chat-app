@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
+import { backendUrl } from "../utils/allUrls";
 
 const socketContext = createContext();
 
@@ -17,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
     if (authUser) {
       // console.log(`hello ji`);
 
-      const socket = io("https://chat-app-60lc.onrender.com/", {
+      const socket = io(backendUrl, {
         query: {
           userId: authUser._id,
         },

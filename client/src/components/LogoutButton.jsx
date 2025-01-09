@@ -6,6 +6,7 @@ import axios from "axios";
 import { logout } from "../redux/features/User/UserSlice"; // Adjust the path based on your file structure
 
 import { useSocket } from "../context/SocketContext";
+import { backendUrl } from "../utils/allUrls";
 
 const LogoutButton = () => {
   const dispatch = useDispatch();
@@ -13,10 +14,12 @@ const LogoutButton = () => {
 
   const { socket } = useSocket(); // Access the socket context
 
+  const logoutUrl = `${backendUrl}/api/authRoutes/logoutUser`
+
   const handleLogout = async () => {
     try {
       // Call API for logout
-      const res = await axios.post("https://chat-app-60lc.onrender.com/api/authRoutes/logoutUser",{},{
+      const res = await axios.post( logoutUrl,{},{
         withCredentials:true
       });
 
