@@ -3,7 +3,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import {app ,server} from "./socket/socket.js"
 import path from "path"
+import dotenv from "dotenv"
 
+dotenv.config()
 
 // Import your database connection
 import connectDB from "./db/db.js";
@@ -14,7 +16,7 @@ const __dirname = path.resolve()
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "https://chat-app-60lc.onrender.com/", credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL , credentials: true }));
 
 // Routes
 import userRoutes from "./routes/user.routes.js";
@@ -25,10 +27,10 @@ app.use("/api/userRoutes", userRoutes);
 app.use("/api/authRoutes", authRoutes);
 app.use("/api/conversation", conversationRoutes);
 
-app.use(express.static(path.join(__dirname,"/client/dist")))
-app.get('*', (req,res) => {
-  res.sendFile(path.resolve(__dirname,'client', 'dist', 'index.html'))
-})
+// app.use(express.static(path.join(__dirname,"/client/dist")))
+// app.get('*', (req,res) => {
+//   res.sendFile(path.resolve(__dirname,'client', 'dist', 'index.html'))
+// })
 
 // Default route
 app.get("/", (req, res) => {

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useSocket } from "../context/SocketContext";
 import { setSelectedChatUser } from "../redux/features/User/UserSlice";
+import { backendUrl } from "../utils/allUrls";
 
 function ChatBox({ back }) {
   const currentUser = useSelector((state) => state.User?.loggedInUser); // Logged-in user's details
@@ -24,13 +25,17 @@ function ChatBox({ back }) {
     }
   }, [onlineUsers, selectedChatUser]);
 
+  const conversationUrl = `${backendUrl}/api/conversation/getMessages/${selectedChatUser?._id}`
+
+  const sendMessageUrl = `${backendUrl}/api/conversation/sendMessage/${selectedChatUser?._id}`
+
   useEffect(() => {
     const getConversation = async () => {
       if (!selectedChatUser?._id) return; // Ensure a user is selected before fetching
 
       try {
         const res = await axios.post(
-          `https://chat-app-60lc.onrender.com/api/conversation/getMessages/${selectedChatUser._id}`,
+          conversationUrl,
           {},
           {
             withCredentials: true, // Include cookies for authentication
@@ -79,7 +84,7 @@ function ChatBox({ back }) {
     try {
       // Send the message to the backend
       await axios.post(
-        `https://chat-app-60lc.onrender.com/api/conversation/sendMessage/${selectedChatUser._id}`,
+         sendMessageUrl,
         { message: messageText.trim() },
         {
           withCredentials: true, // Include cookies for authentication
@@ -175,7 +180,7 @@ function ChatBox({ back }) {
                     {message.message}
                   </div>
                   <div className="chat-footer text-xs text-base-content/70 mt-1">
-                    {new Date(message.createdAt).toLocaleString()}
+                    {new Date(message.createdAt).toLocaleString("en-GB")}
                   </div>
                 </div>
               ))

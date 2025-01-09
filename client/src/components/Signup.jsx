@@ -7,6 +7,7 @@ import { User, Mail, Phone, Lock, Calendar } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { backendUrl } from '../utils/allUrls';
 
 // Define Zod schema for form validation
 const signupSchema = z.object({
@@ -34,9 +35,11 @@ function Signup() {
     resolver: zodResolver(signupSchema),
   });
 
+  const createUserUrl = `${backendUrl}/api/userRoutes/createUser`
+
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('https://chat-app-60lc.onrender.com/api/userRoutes/createUser', data);
+      const response = await axios.post( createUserUrl, data);
       reset(); // Clear the form on success
       toast.success(response?.data?.message); // Show success toast
       navigate('/', { state: { success: true } }); // Navigate immediately

@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../redux/features/User/UserSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { backendUrl } from '../utils/allUrls';
 
 // Define validation schema with Zod
 const loginSchema = z.object({
@@ -24,6 +25,8 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const loggedInUser = useSelector((state) => state.User.loggedInUser); // Get logged-in user from the store
+
   const {
     register,
     handleSubmit,
@@ -32,9 +35,18 @@ function Login() {
     resolver: zodResolver(loginSchema), // Use Zod for schema validation
   });
 
+  const loginUrl = `${backendUrl}/api/authRoutes/loginUser`
+
+  // If the user is already logged in, redirect them to the home screen
+  useEffect(() => {
+    if (loggedInUser) {
+      navigate('/homeScreen');
+    }
+  }, [loggedInUser, navigate]);
+
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('https://chat-app-60lc.onrender.com/api/authRoutes/loginUser', data, {
+      const response = await axios.post(loginUrl, data, {
         withCredentials: true,
       });
 
@@ -51,7 +63,6 @@ function Login() {
       style={{ backgroundColor: '#EDEDED' }} // Solid color background
       className="h-screen flex items-center justify-center"
     >
-     
       <div className="bg-[#f0f2f5] bg-opacity-95 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Log In</h2>
 
