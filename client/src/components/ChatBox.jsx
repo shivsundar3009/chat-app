@@ -111,9 +111,10 @@ function ChatBox({ back }) {
   };
 
   return (
-    <div className="overflow-y-auto flex-1 h-full flex flex-col bg-base-100">
+    <div className="">
       {selectedChatUser ? (
         <>
+        <div className="h-screen flex flex-col justify-between"> 
           {/* Chat Header */}
           <div className="p-4 border-b border-base-300 flex items-center justify-between gap-4 bg-base-100">
             {/* Avatar and User Info */}
@@ -219,9 +220,11 @@ function ChatBox({ back }) {
               </div>
             </div>
           </div>
+
+          </div>
         </>
       ) : (
-        <div className="flex flex-col justify-between md:items-center md:justify-center h-full text-center">
+        <div className="flex flex-col justify-between md:items-center md:justify-center text-center h-screen">
           <img
             src={currentUser?.profilePic}
             alt={`${currentUser?.userName}'s profile`}

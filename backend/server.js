@@ -37,6 +37,11 @@ app.get("/", (req, res) => {
   res.send("Chat app server started");
 });
 
+// Simple endpoint to simulate the backend being alive
+app.get('/api/heartbeat', (req, res) => {
+  res.status(200).json({ message: "App is active" });
+});
+
 // Start the server
 const PORT = 5000;
 server.listen(PORT, () => {
