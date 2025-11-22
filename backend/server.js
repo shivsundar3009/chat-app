@@ -1,6 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import cors from "cors";
+// import cors from "cors";
 import {app ,server} from "./socket/socket.js"
 import path from "path"
 import dotenv from "dotenv"
@@ -16,7 +16,7 @@ const __dirname = path.resolve()
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.FRONTEND_URL , credentials: true }));
+// app.use(cors({ origin: "*" , credentials: true }));
 
 // Routes
 import userRoutes from "./routes/user.routes.js";

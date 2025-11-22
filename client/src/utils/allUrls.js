@@ -1,1 +1,1 @@
-export const backendUrl = "https://chat-app-60lc.onrender.com"
+export const backendUrl = "http://localhost:5000"
